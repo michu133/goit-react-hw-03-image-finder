@@ -39,25 +39,27 @@ export class App extends Component {
     }
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevState.query !== this.state.query ||
+      prevState.page !== this.state.page
+    ) {
+      this.fetchImages(this.state.query, this.state.perPage, this.state.page);
+    }
+  }
+
   handleLoadMore = () => {
-    this.setState(
-      prevState => ({ page: prevState.page + 1 }),
-      () => {
-        console.log(this.state.page);
-        this.fetchImages(this.state.query, this.state.perPage, this.state.page);
-      }
-    );
+    this.setState(prevState => ({ page: prevState.page + 1 }));
   };
+
   handleSearch = query => {
     if (query !== this.state.query) {
-      // Jeśli zapytanie się zmieniło, wyczyść obrazy
       this.setState({
         query,
         images: [],
+        page: 1,
       });
     }
-
-    this.fetchImages(query, this.state.perPage, this.state.page);
   };
 
   render() {
